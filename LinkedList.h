@@ -14,7 +14,7 @@ public:// friends are trusted with priavte data
 private:
 	T m_Data;
 	LinkNode* m_Next;
-
+	LinkNode* m_Prev;
 };
 
 template <class T>
@@ -47,8 +47,18 @@ public:
 	}
 	void operator++(int)// postfix
 	{
-		assert(m_Node!+ nullptr);
+		assert(m_Node!= nullptr);
 		m_Node = m_Node->m_Next;
+	}
+	void operator--()
+	{
+		assert(m_Node != nullptr);
+		m_Node = m_Node->m_Prev;
+	}
+	void operator--(int)
+	{
+		assert(m_Node != nullptr);
+		m_Node = m_Node->m_Prev;
 	}
 	bool operator!=(LinkNode<T>* node)
 	{
@@ -102,51 +112,108 @@ public:
 		assert(node != nullptr);
 		node->m_Data = NewItem;
 		node->m_Next = nullptr;
+		node->m_Prev = nullptr;
 
 		if (m_LastNode != nullptr)
 		{
 			m_LastNode->m_Next = node;
-			m_LastNode = node;
+			node->m_Prev = m_LastNode;
 		}
 		else
 		{
 			m_Root = node;
 			m_LastNode = node;
 		}
+		m_LastNode = node;
 
 		m_Size++;
 	}
+
+	/*void Pull()
+	{
+		assert(m_LastNode != nullptr);
+		if (m_LastNode->m_Next);
+		{
+			delete m_LastNode;
+			m_LastNode = nullptr;
+		}
+	}*/
 	void Pop()
 	{
 		assert(m_Root != nullptr);
 		if (m_Root->m_Next == nullptr)
 		{
 			delete m_Root;
-			//delete m_LastNode;
+			
 			m_Root = nullptr;
 			m_LastNode = nullptr;
 		}
 		else
 		{
-			LinkNode<T>* prevNode = m_Root;
+			LinkNode<T>* prevNode = m_LastNode->m_Prev;
 
-			while (prevNode->m_Next != nullptr && prevNode->m_Next != m_LastNode)
-			{
-				prevNode = prevNode->m_Next;
-			}
-
-			delete m_LastNode;
 			prevNode->m_Next = nullptr;
+			delete m_LastNode;
 			m_LastNode = prevNode;
 			prevNode = nullptr;
+		}
+		m_Size = (m_Size == 0 ? m_Size : m_Size - 1);
+		
+	}
 
+	
+	
+	
+
+		void PushFront(T NewItem)
+		{
+			LinkNode<T>* node = new LinkNode<T>;
+			assert(node != nullptr);
+			node->m_Data = NewItem;
+			node->m_Next = nullptr;
+			node->m_Prev = nullptr;
+			if (m_Root != nullptr)
+			{
+				node->m_Next = m_Root;
+				m_Root->m_Prev = node;
+				m_Root = node;
+			}
+			else
+			{
+				m_Root = node;
+				m_LastNode = node;
+			}
+
+			m_Size++;
+		}
+	void PopFornt()
+		{
+		assert(m_Root != nullptr);
+		LinkNode<T>*temp = m_Root;
+
+		m_Root = m_Root->m_Next;
+		delete temp;
+
+		temp = nullptr;
+		if (m_Root == nullptr)
+		{
+			m_LastNode = nullptr;
+		}
+
+		if (m_Root != nullptr)
+		{
+			m_Root->m_Prev = nullptr;
+		}
+		else
+		{
+			m_LastNode = nullptr;
 		}
 		m_Size = (m_Size == 0 ? m_Size : m_Size - 1);
 
-		int GetSize()
-		{
-			return m_Size;
 		}
+	int GetSize()
+	{
+		return m_Size;
 	}
 private:
 	int m_Size;
