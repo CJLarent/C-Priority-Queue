@@ -2,24 +2,25 @@
 #include"LinkedList.h"
 
 template<class T> 
-class Queue
+class Dequeue
 {
 public:
-	Queue(int size)
+	Dequeue(int size)
 	{
 		assert(size > 0);
 		m_Size = size;
 	}
-	~Queue(){}
+	~Dequeue(){}
 
-	void Push(T item)
+	void Push(T item, int proity  )// pushing the back 
 	{
-		if (m_Items.GetSize() < m_Size)
-		{
-			m_Items.Push(item);
-		}
+
+		
+		m_Items.Push(item,proity);
+			m_Size++;
+			m_Proity++;
 	}
-	void Pop()
+	void Pop() // pop from the fornt 
 	{
 		m_Items.PopFornt();
 	}
@@ -60,6 +61,8 @@ public:
 	
 private:
 	LinkedList<T>m_Items;
+	//LinkedList<T>m_Root;
+	int m_Proity;
 	int m_Size;
 	
 };
